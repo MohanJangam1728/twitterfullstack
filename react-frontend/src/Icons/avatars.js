@@ -23,7 +23,7 @@ const Avatars = (props) => {
     }
     
     return (<>
-            {avatar}
+            {avatarsIcons[0]}
         </>
     )
 }

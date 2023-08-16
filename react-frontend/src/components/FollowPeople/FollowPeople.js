@@ -4,6 +4,7 @@ import axios from 'axios';
 import Avatars from '../../Icons/avatars';
 import Cookies from 'js-cookie';
 import { Navigate,useNavigate } from 'react-router-dom';
+import baseurl from '../BaseUrl';
 
 function FollowPeople() {
     const navigate = useNavigate()
@@ -14,7 +15,7 @@ function FollowPeople() {
         try{
             let options = {
                 method:"GET",
-                url:'http://localhost:5000/follow-people',
+                url:`${baseurl}/follow-people`,
                 headers:{
                     authorization:`Bearer ${Cookies.get("authToken")}`
                 }
@@ -49,7 +50,7 @@ function FollowPeople() {
         try{
             let options = {
                 method:"POST",
-                url:`http://localhost:5000/follow?id=${person._id}`,
+                url:`${baseurl}/follow?id=${person._id}`,
                 headers:{
                     authorization:`Bearer ${Cookies.get("authToken")}`
                 }
@@ -64,21 +65,21 @@ function FollowPeople() {
 
     const handleUnfollow = async(person) => {
         console.log("handleUnfollow",person)
-        try{
-            let options = {
-                method:"DELETE",
-                url:`http://localhost:5000/unfollow?id=${person._id}`,
-                headers:{
-                    authorization:`Bearer ${Cookies.get("authToken")}`
-                }
-            }
-            const res = await axios(options)
-            console.log(res)
+        // try{
+        //     let options = {
+        //         method:"DELETE",
+        //         url:`${baseurl}/unfollow?id=${person._id}`,
+        //         headers:{
+        //             authorization:`Bearer ${Cookies.get("authToken")}`
+        //         }
+        //     }
+        //     const res = await axios(options)
+        //     console.log(res)
             
-            setFollowingIds(followingIds.filter((each)=>each !== person._id))
-        }catch(err){
-            alert(err.response.data.error)
-        }
+        //     setFollowingIds(followingIds.filter((each)=>each !== person._id))
+        // }catch(err){
+        //     alert(err.response.data.error)
+        // }
     }
 
     

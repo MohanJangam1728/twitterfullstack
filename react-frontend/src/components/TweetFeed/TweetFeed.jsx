@@ -6,6 +6,7 @@ import CommentIcon from "../../Icons/CommentIcon";
 import LikeIcon from "../../Icons/likeIcon";
 import Cookies from "js-cookie";
 import axios from "axios";
+import baseurl from "../BaseUrl";
 const TweetFeed = () => {
     let cacheAvatar = {}
     const [feed,setFeed] = useState([]);
@@ -13,7 +14,7 @@ const TweetFeed = () => {
         try{
             let options = {
                 method:"GET",
-                url:'http://localhost:5000/home/feed',
+                url:`${baseurl}/home/feed`,
                 headers:{
                     authorization:`Bearer ${Cookies.get("authToken")}`
                 }

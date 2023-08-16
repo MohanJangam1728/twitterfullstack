@@ -2,6 +2,7 @@ import React,{ useState} from "react";
 import "./Register.css";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import baseurl from "../BaseUrl";
 
 const Register = () =>{
     const navigate = useNavigate()
@@ -15,7 +16,7 @@ const Register = () =>{
         console.log("Clicked submit",event)
         try{
             let options={
-                url:"http://localhost:5000/register",
+                url:`${baseurl}/register`,
                 method:"POST",
                 data:{
                     name,

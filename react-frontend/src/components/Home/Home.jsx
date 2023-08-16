@@ -5,6 +5,7 @@ import Avatars from "../../Icons/avatars";
 import TweetIcon from "../../Icons/tweetIcon"
 import TweetFeed from "../TweetFeed/TweetFeed";
 import Cookies from "js-cookie";
+import baseurl from "../BaseUrl";
 
 const Home = () => {
     const [tweet,setTweet] = useState("");
@@ -24,7 +25,7 @@ const Home = () => {
             try{
                 let options = {
                     method:"POST",
-                    url:"http://localhost:5000/home/tweet",
+                    url:`${baseurl}/home/tweet`,
                     data:{
                         tweet
                     },

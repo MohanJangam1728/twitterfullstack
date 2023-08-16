@@ -3,6 +3,7 @@ import "./Login.css";
 import axios from "axios";
 import {  useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'
+import baseurl from "../BaseUrl";
 
 const Login = () =>{
     const navigate = useNavigate()
@@ -13,7 +14,7 @@ const Login = () =>{
         event.preventDefault();
         try{
             const options = {
-                url:"http://localhost:5000/login",
+                url:`${baseurl}/login`,
                 method:"POST",
                 data:{
                     username,password
