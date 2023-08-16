@@ -15,9 +15,13 @@
 }
 .main1{
     min-height: inherit;
-    background-color: rgba(116, 87, 60, 0.897);
+    /* background-color: rgba(116, 87, 60, 0.897); */
+    background-color: rgb(243,243,239);;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.main2> form > input{
+    margin-bottom: 10px;
 }

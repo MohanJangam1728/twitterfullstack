@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt")
 const User  = require('../models/User.model')
 const Tweet = require("../models/Tweets.model");
 const Follower = require('../models/Follower.model');
+const { isValidObjectId, isObjectIdOrHexString } = require('mongoose');
+const {ObjectId} = require("mongodb")
 
 const authenticationToken = (request, response, next) => {
     let jwtToken;
@@ -23,7 +25,8 @@ const authenticationToken = (request, response, next) => {
           } else {
             console.log(request.username,payload)
             request.username = payload.username;
-            request.userid = payload.userid
+            request.userid = payload.userid;
+            request.name = payload.name;
             next();
           }
         });
@@ -60,9 +63,11 @@ router.route("/login").post(async(req,res)=>{
     } else {
         const bcryptedPassword = await bcrypt.compare(password,dBUser.password)
         if(bcryptedPassword === true){
-            const payload = { username: dBUser.username,userid:dBUser._id };
+            const payload = { username: dBUser.username,userid:dBUser._id,name:dBUser.name };
             const jwtToken = jwt.sign(payload, "MY_SECRET_CODE");
-            res.send({ jwtToken });
+            const isNewUser = await Follower.findOne({follower_user_id:dBUser._id}) === null
+            const name = dBUser.name
+            res.send({ jwtToken, isNewUser, name});
         } else {
             res.status(400).json({error:"Wrong password"})
         }
@@ -71,13 +76,13 @@ router.route("/login").post(async(req,res)=>{
 
 router.route("/home/tweet").post(authenticationToken, async(req,res)=>{
     console.log(req.username)
-    const {username} = req;
+    const {username,name} = req;
     const {tweet} = req.body;
     const user = await User.findOne({username:username});
     
     if(user !== null){
         const user_id = user._id;
-        const newTweet = new Tweet({ user_id, tweet});
+        const newTweet = new Tweet({ user_id, tweet,name,username});
         newTweet.save()
             .then(() => res.json('Tweeted Successfully'))
             .catch(err => res.status(400).json({error:"Tweet Unsuccesfull"}));
@@ -88,9 +93,9 @@ router.route("/home/tweet").post(authenticationToken, async(req,res)=>{
 
 router.route("/follow-people").get(authenticationToken, async(req,res)=>{
     console.log(req.username)
-    const {username} = req;
+    const {username,userid} = req;
     const users = await User.find({ username: { $ne:username  } });
-    
+    // need to write filter on follower table
     if(users !== null){
         // console.log(users)
         res.json({users})
@@ -127,8 +132,50 @@ router.route("/unfollow").delete(authenticationToken, (req,res)=>{
     deleteRecord
         .then(() => res.json('Unfollowed Successfully'))
         .catch(err => res.status(400).json({error:"Unfollow Unsuccesfull"}));
-        
+})
+
+router.route("/home/feed").get(authenticationToken, async(req,res)=>{
+    console.log(req.username,req.userid)
+    const {username,userid} = req
     
+    
+    const followerUserId = userid;
+    try{
+        const tweets = await Follower.aggregate([
+    
+        { $match: { follower_user_id:  new ObjectId(followerUserId) } },
+    
+    // Lookup to join with tweets collection based on following_user_id
+    {
+        $lookup: {
+            from: 'tweets',
+            localField: 'following_user_id',
+            foreignField: 'user_id',
+            as: 'tweets'
+        }
+    },
+    // Unwind the tweets array
+    { $unwind: '$tweets' },
+    // // Sort the tweets by some criteria if needed
+    { $sort: { 'tweets.createdAt': 1 } }, // Sorting by timestamp in descending order
+    // // Group to restructure the result
+    {
+        $group: {
+            _id: '$tweets._id', // Group by tweet ID
+            tweet: { $first: '$tweets.tweet' }, // Get the first instance of the tweet
+            userid: { $first: '$tweets.user_id' },
+            name:{$first: '$tweets.name'},
+            username:{$first: '$tweets.username'},
+            tweetAt: { $first: '$tweets.createdAt' }
+        }
+    }
+]);
+    res.send(tweets)
+
+}catch(err){
+    res.status(400).json({err})
+}
+
 })
 
 

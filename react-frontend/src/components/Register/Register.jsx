@@ -47,24 +47,24 @@ const Register = () =>{
         <div className="main2">
             <form onSubmit={submitHandler}>
                 <label id="reg-name">Name</label>
-                <br/>
+                
                 <input value={name} onChange={(e)=>handleStateChange(e,setName)} required htmlFor="reg-name" minLength={6} type='text'/>
-                <br/>
+                
                 <label id="reg-username">Username</label>
-                <br/>
+                
                 <input value={username} onChange={(e)=>handleStateChange(e,setUsername)} pattern="[A-Za-z0-9]+" required htmlFor="reg-username" minLength={6} type='text'/>
-                <br/>
+                
                 <label id="reg-password">Password</label>
-                <br/>
+                
                 <input value={password} onChange={(e)=>handleStateChange(e,setPassword)} required htmlFor="reg-password" minLength={6} type='password'/>
-                <br/>
+                <div>
                 <label>Gender</label>
                 <br/>
                 <label id="male">Male</label>
                 <input onChange={(e)=>handleStateChange(e,setGender)} htmlFor="male" type='radio' value="male" name="gender" defaultChecked/>
                 <label id="female">Female</label>
                 <input onChange={(e)=>handleStateChange(e,setGender)} htmlFor="female" type='radio' value="female" name="gender"/>
-                <br/>
+                </div>
                 <input type="submit" value="Register"/>
             </form>
             <button onClick={()=>navigate('/login')}>Already a member? Login</button>

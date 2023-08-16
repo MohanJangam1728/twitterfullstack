@@ -4,6 +4,7 @@ import "./Home.css"
 import Avatars from "../../Icons/avatars";
 import TweetIcon from "../../Icons/tweetIcon"
 import TweetFeed from "../TweetFeed/TweetFeed";
+import Cookies from "js-cookie";
 
 const Home = () => {
     const [tweet,setTweet] = useState("");
@@ -28,7 +29,7 @@ const Home = () => {
                         tweet
                     },
                     headers:{
-                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                            Authorization: `Bearer ${Cookies.get("authToken")}`,
                     }
                 }
                 const res = await axios(options);
@@ -47,7 +48,7 @@ const Home = () => {
         <div className="home-main">
             <div className="post-thought">
                 <Avatars></Avatars>
-                <textarea value={tweet} onChange={(e)=>handleTweetMsg(e)} id="tweetmsg" maxLength="50" placeholder="Post your thoughts..."></textarea>
+                <textarea value={tweet} onChange={(e)=>handleTweetMsg(e)} id="tweetmsg" maxLength="50" placeholder={`Hi ${Cookies.get('name')} Post your thoughts...`}></textarea>
                 
                 <TweetIcon onClick={handleTweet}></TweetIcon>
             </div>

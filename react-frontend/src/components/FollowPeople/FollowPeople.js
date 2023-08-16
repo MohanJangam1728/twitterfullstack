@@ -2,17 +2,21 @@ import React, { useEffect, useState } from 'react';
 import './FollowPeople.css'
 import axios from 'axios';
 import Avatars from '../../Icons/avatars';
+import Cookies from 'js-cookie';
+import { Navigate,useNavigate } from 'react-router-dom';
 
 function FollowPeople() {
+    const navigate = useNavigate()
     const [suggestPeople,setSuggestPeople] = useState([]);
     const [followingIds,setFollowingIds] = useState([]);
+
     const getSuggestedPeople = async()=>{
         try{
             let options = {
                 method:"GET",
                 url:'http://localhost:5000/follow-people',
                 headers:{
-                    authorization:`Bearer ${localStorage.getItem("authToken")}`
+                    authorization:`Bearer ${Cookies.get("authToken")}`
                 }
             }
             const res = await axios(options)
@@ -24,6 +28,22 @@ function FollowPeople() {
         }
         
     };
+
+    useEffect(()=>{
+        getSuggestedPeople()
+    },[]);
+
+    const jwtToken = Cookies.get('authToken')
+    console.log("jwt",jwtToken)
+    if (jwtToken === undefined) {
+        // return <redirect to="/login" />
+        return <Navigate to='/login' />
+    }
+
+    const handleNext = (e) => {
+        navigate("/home")
+    }
+    
     const handleFollow = async(person) => {
         console.log("handleFollow",person)
         try{
@@ -31,7 +51,7 @@ function FollowPeople() {
                 method:"POST",
                 url:`http://localhost:5000/follow?id=${person._id}`,
                 headers:{
-                    authorization:`Bearer ${localStorage.getItem("authToken")}`
+                    authorization:`Bearer ${Cookies.get("authToken")}`
                 }
             }
             const res = await axios(options)
@@ -49,7 +69,7 @@ function FollowPeople() {
                 method:"DELETE",
                 url:`http://localhost:5000/unfollow?id=${person._id}`,
                 headers:{
-                    authorization:`Bearer ${localStorage.getItem("authToken")}`
+                    authorization:`Bearer ${Cookies.get("authToken")}`
                 }
             }
             const res = await axios(options)
@@ -61,13 +81,10 @@ function FollowPeople() {
         }
     }
 
-    useEffect(()=>{
-        getSuggestedPeople()
-    },[]);
+    
 
   return (
     <div className='follow-people-main'>
-        
         <div className='people-list'>
             <h4>People you may like</h4>
             <div>
@@ -85,6 +102,9 @@ function FollowPeople() {
                     </div>
             })}
             </div>
+            <button onClick={handleNext} disabled={followingIds.length>=1?false:true}>
+                {followingIds.length>=1?'Next':'Follow atleast one to proceed'}
+            </button>
         </div>
     </div>
   )

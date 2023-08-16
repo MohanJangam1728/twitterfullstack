@@ -41,5 +41,24 @@
     background-color: rgb(12,103,194);
     color:white;
     cursor: pointer;
-    
+}
+.people-list > button {
+    background-color: transparent;
+    border:1px solid rgb(12,103,194);
+    color:rgb(12,103,194);
+    width:100%;
+    border-radius: 10px;
+    padding:10px;
+    font-weight: 800;
+}
+.people-list > button:hover{
+    background-color: rgb(12,103,194);
+    color:white;
+    cursor: pointer;
+}
+
+.people-list > button:disabled{
+    background-color: transparent;
+    color:#666;
+    cursor: not-allowed;
 }

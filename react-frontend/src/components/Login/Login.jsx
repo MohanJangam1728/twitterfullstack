@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import "./Login.css";
 import axios from "axios";
 import {  useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 
 const Login = () =>{
     const navigate = useNavigate()
@@ -19,10 +20,21 @@ const Login = () =>{
                 }
             }
             const res = await axios(options)
-            console.log(res.data.jwtToken)
-            localStorage.setItem("authToken",res.data.jwtToken)
+            console.log(res.data.jwtToken,res.data.isNewUser)
+            const {jwtToken,isNewUser,name} = res.data
+            Cookies.set('authToken', jwtToken, {
+                expires: 30,
+                path: '/',
+            })
+            Cookies.set('name',name,{expires: 30,path: '/',})
+            // localStorage.setItem("authToken",res.data.jwtToken)
             // navigate('/home')
-            navigate('/follow-people')
+            if(isNewUser){
+                navigate('/follow-people')
+            }else{
+                navigate('/home')
+            }
+            
         }catch(err){
             console.log(err);
             alert(err.response.data.error)
@@ -39,13 +51,13 @@ const Login = () =>{
         <div className="main2">
             <form onSubmit={submitHandler}>
                 <label id="login-username">Username</label>
-                <br/>
+                {/* <br/> */}
                 <input value={username} onChange={(e)=>handleStateChange(e,setUsername)} pattern="[A-Za-z0-9]+" required htmlFor="login-username" minLength={6} type='text'/>
-                <br/>
+                {/* <br/> */}
                 <label id="login-password">Password</label>
-                <br/>
+                {/* <br/> */}
                 <input value={password} onChange={(e)=>handleStateChange(e,setPassword)} required htmlFor="login-password" minLength={6} type='password'/>
-                <br/>
+                {/* <br/> */}
                 
                 <input type="submit" value="Login"/>
             </form>
