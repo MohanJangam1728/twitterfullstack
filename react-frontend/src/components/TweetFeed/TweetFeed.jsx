@@ -10,6 +10,7 @@ import baseurl from "../BaseUrl";
 const TweetFeed = () => {
     let cacheAvatar = {}
     const [feed,setFeed] = useState([]);
+    const [likedFeeds,setLikedFeeds] = useState([]);
     const getLatestFeed = async() => {
         try{
             let options = {
@@ -37,9 +38,25 @@ const TweetFeed = () => {
     // let x= setInterval(getLatestFeed,3000)
     useEffect(()=>{
         getLatestFeed()
-        
-        
     },[]);
+    
+    const handleLike = async(tweet_id) => {
+        try{
+            let options = {
+                method:"POST",
+                url:`${baseurl}/home/like_tweet?id=${tweet_id}`,
+                headers:{
+                    authorization:`Bearer ${Cookies.get("authToken")}`
+                }
+            }
+            const res = await axios(options);
+            // alert("Liked the tweet")
+            setLikedFeeds((likedFeeds)=>[...likedFeeds,tweet_id])
+            
+        }catch(err){
+            alert(err.response.data.error)
+        }
+    }
     
 
     return (<>
@@ -64,11 +81,13 @@ const TweetFeed = () => {
                 </div>
                 <hr/>
                 <div className="tweet-feed-main-like-comment">
-                    <div><LikeIcon></LikeIcon><span>Like</span></div>
-                    <div><CommentIcon></CommentIcon><span>Comment</span></div>
+                    <div onClick={()=>handleLike(each._id)}><LikeIcon liked={likedFeeds.includes(each._id)}></LikeIcon></div>
+                    <div><CommentIcon></CommentIcon></div>
                     {/* <LikeIcon></LikeIcon>
                     <CommentIcon></CommentIcon> */}
                 </div>
+
+                
                 </div>
                 
             })}

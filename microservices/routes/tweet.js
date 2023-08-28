@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt")
 const User  = require('../models/User.model')
 const Tweet = require("../models/Tweets.model");
 const Follower = require('../models/Follower.model');
-const { isValidObjectId, isObjectIdOrHexString } = require('mongoose');
+const Likes = require("../models/Likes.model")
 const {ObjectId} = require("mongodb")
 
 const authenticationToken = (request, response, next) => {
@@ -178,6 +178,27 @@ router.route("/home/feed").get(authenticationToken, async(req,res)=>{
 
 })
 
+
+router.route("/home/like_tweet").post(authenticationToken, async(req,res)=>{
+    try{
+        const {id} = req.query
+        const {username,userid} = req
+        // const {username} = req;
+        const record = await Likes.findOne({ tweet_id:id,user_id:userid })
+        if(record === null){
+            const newLike = new Likes({tweet_id:id,user_id:userid });
+            newLike.save()
+                .then(() => res.json('Liked Blog'))
+                .catch(err => res.status(400).json({error:"Liking Unsuccesfull"}));
+        }else{
+            res.status(400).json({error:"Already Liked"})
+        }
+        
+        
+    }catch(err){
+        res.send(400).json({err})
+    }
+})
 
 
 

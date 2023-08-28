@@ -53,11 +53,11 @@ const Login = () =>{
             <form onSubmit={submitHandler}>
                 <label id="login-username">Username</label>
                 {/* <br/> */}
-                <input value={username} onChange={(e)=>handleStateChange(e,setUsername)} pattern="[A-Za-z0-9]+" required htmlFor="login-username" minLength={6} type='text'/>
+                <input placeholder="try jackiechan" value={username} onChange={(e)=>handleStateChange(e,setUsername)} pattern="[A-Za-z0-9]+" required htmlFor="login-username" minLength={6} type='text'/>
                 {/* <br/> */}
                 <label id="login-password">Password</label>
                 {/* <br/> */}
-                <input value={password} onChange={(e)=>handleStateChange(e,setPassword)} required htmlFor="login-password" minLength={6} type='password'/>
+                <input placeholder="qwerty" value={password} onChange={(e)=>handleStateChange(e,setPassword)} required htmlFor="login-password" minLength={6} type='password'/>
                 {/* <br/> */}
                 
                 <input type="submit" value="Login"/>

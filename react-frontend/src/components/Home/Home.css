@@ -10,7 +10,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* width:100% */
+    width:100%;
+    margin-left:'50px'
     /* width:calc(100%-10px) */
     /* width: inherit; */
 }
@@ -18,8 +19,11 @@ textarea{
     border-radius: 15px;
     width: 400px;
     padding: 10px;
-    /* flex-grow: 1; */
-    /* flex-shrink: 1; */
+    /* flex-grow: 1;
+    /* flex-shrink: 1; */ 
+}
+@media screen and (max-width:620px){
+    textarea{width:65%}
 }
 .tweetErr{
     color:red;
