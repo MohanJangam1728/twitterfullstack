@@ -33,7 +33,6 @@
 }
 .tweet-feed-main-likes-comments >span:first-child{
     display: flex;
-    color:red
 }
 
 /* .tweet-feed-main-like-comment{

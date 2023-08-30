@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import baseurl from "../BaseUrl";
 import {  Navigate, useNavigate } from 'react-router-dom';
 import { Menu, MenuItem } from '@mui/material';
+import LoadingSvg from "../../Icons/loading";
 const TweetFeed = React.lazy(()=>import("../TweetFeed/TweetFeed"));
 
 const Home = () => {
@@ -97,6 +98,7 @@ const Home = () => {
           </Menu>
 
             {tweetErr &&<span className="tweetErr">{tweetErr}</span>}
+            {/* <LoadingSvg/> */}
             <Suspense fallback={<div>Loading.....</div>}>
                 <TweetFeed/>
             </Suspense>
